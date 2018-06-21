@@ -1,0 +1,19 @@
+base_indoor_m_poi表m_poi_id:10021:ename含有中文
+F1层base_indoor_fl表fl_id:1002103:fl_name字段必须以F或者B或者M+数字开头
+F1层base_indoor_stairs表node_id:10021030103:direction值不在｛0，1，2, 3｝范围内
+F1层base_indoor_stairs表node_id:10021030141:direction值不在｛0，1，2, 3｝范围内
+F1层base_indoor_node表node_id:10021030001:kind不在值域内
+F1层base_indoor_node表node_id:10021030005:kind为16时，node_id不在doors表内
+F1层base_indoor_node表node_id:10021030012:kind不在值域内
+F1层base_indoor_node表node_id:10021030047:kind为16时，node_id不在doors表内
+F1层base_indoor_poi表poi_id:10021030001:ename含有中文
+F1层base_indoor_poi表poi_id:10021030003:poi表里的category为91033、25056、25055的sub_kind必须有值
+F1层base_indoor_poi表poi_id:10021030005:poi表里的category为91033、25056、25055的sub_kind必须有值
+F1层base_indoor_poi表poi_id:poi名称（c_name）相同，但是分类(category)不相同:
+==== 10021030149,扶梯,25137
+==== 10021030003,扶梯,91033
+==== 10021030148,扶梯,25137
+==== 10021030013,扶梯,25137
+==== 10021030012,扶梯,25137
+==== 10021030004,扶梯,25137
+F1层base_indoor_region表region_id:10021030001:ename含有中文
