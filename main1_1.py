@@ -20,7 +20,9 @@ class indoor_map():
     floor_list = []  #保存楼层文件夹名
     build_category = '' #building类型
     floor_order_dict = {}
+    flid_flname = {} #fl_id(key),fl_name(value)  南非config
     node_dict = {}
+    node_flid = {}  #node_id(key),floor_id(value)
     node_list = []
     build_coding = {}
     build_time = {}
@@ -118,6 +120,7 @@ class indoor_map():
                 key = str(int(row[0]))+'_'+row[1]
                 val = row[2]
                 self.nanfei_flid[key] = val
+                self.flid_flname[val] = row[1]
             print('nanfei_flid:', self.nanfei_flid)
                 # nanfeifl_dict[rownum[1]] = rownum[2]
                 # self.nanfei_flid[rownum[0]] = fl
@@ -434,6 +437,7 @@ class indoor_map():
             feature.SetField('m_time', self.mtime)         #kink赋值
             self.node_list.append(value)
             self.node_dict[value] = geo[0]
+            self.node_flid[value] = fl_id
             lyr.SetFeature(feature)
 
         # for i in self.node_list:
@@ -641,7 +645,7 @@ class indoor_map():
         fn = self.path + self.build_name + '/' + floor_name + '/' + dataname
         dataname_node = 'base_indoor_node.shp'
         fn_node = self.path + self.build_name + '/' + floor_name + '/' + dataname_node
-
+        print('floor_order_dict:', self.floor_order_dict)
         ds = self.driver.Open(fn, 1)
         ds_node = self.driver.Open(fn_node, 1)
         if ds is None:
@@ -667,8 +671,10 @@ class indoor_map():
         floor_list = self.floor_list
         for i in floor_list:
             floor_order.append(int(self.floor_order_dict[i][0]))
-        max_floor = max(floor_order)
-        # print(floor_order)
+        max_floor = max(floor_order)  #最高楼层序号
+        min_floor = min(floor_order)  #最低楼层序号
+        print('minfloor:',min_floor,'maxfloor:',max_floor)
+        # print('floor order:', floor_order,'max_floor:', max_floor)
         lyr_defn = lyr.GetLayerDefn()
         for feature in lyr_node:
             # print(type(a), a)
@@ -681,16 +687,33 @@ class indoor_map():
                 feat.SetField('c_time', self.ctime)
                 # print(self.ctime)
                 feat.SetField('m_time', self.mtime)
-                temp = str(node_id_value)
-                floor = int(temp[5:7])  # 获取楼层代码
+                if self.mode_select == '0':
+                    temp = str(node_id_value)
+                    floor = int(temp[5:7])  # 获取楼层代码
+                else:
+                    # print(self.node_flid)
+                    # print(self.flid_flname)
+                    temp_flid = self.node_flid[int(node_id_value)]
+                    temp_flname = self.flid_flname[temp_flid]
+                    floor = int(self.floor_order_dict[temp_flname][0])
+
+                # print('floor:', floor)
                 if kind == '12' or kind == '13' or kind == '17':
                 # print(floor)
-                    if floor == 1 or self.mode_select == '1':
-                        feat.SetField('direction', 2)
-                    elif floor == max_floor and floor != 1:
-                        feat.SetField('direction', 1)
-                    else:
-                        feat.SetField('direction', 0)
+                    if self.mode_select == '0':
+                        if floor == 1:
+                            feat.SetField('direction', 2)
+                        elif floor == max_floor and floor != 1:
+                            feat.SetField('direction', 1)
+                        else:
+                            feat.SetField('direction', 0)
+                    if self.mode_select == '1':
+                        if floor == min_floor:
+                            feat.SetField('direction', 2)
+                        elif floor == max_floor:
+                            feat.SetField('direction', 1)
+                        else:
+                            feat.SetField('direction', 0)
                 lyr.CreateFeature(feat)
         print('base_indoor_stairs表处理完成！')
 
