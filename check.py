@@ -642,6 +642,7 @@ class check():
             for line2 in cname_cate_bak:
                 if line[0] == line2[0] and line[1] != line2[1]:
                     dif_name_category.append(line)
+        dif_name_category_sort = {}
         if len(dif_name_category) != 0:
             for val in dif_name_category:
                 dif_name_category_dict[val[2]] = [val[0],val[1]]
@@ -649,11 +650,11 @@ class check():
             keys_list = list(dif_name_category_dict.keys())
             keys_list.sort()
             # dif_name_category_dict_sort=self.dict_sort(dif_name_category_dict)
-            dif_name_category_dict_sort= dif_name_category_dict
+            dif_name_category_sort = dif_name_category_dict
             # print(dif_name_category_dict_sort)
-            for key in dif_name_category_dict_sort.keys():
-                self.wrong_list.append('==== '+str(key)+','+dif_name_category_dict_sort[key][0]+','+dif_name_category_dict_sort[key][1])
-        print(floor_name + '层' + 'base_indoor_poi表poi_id:'+ 'poi名称（c_name）相同，但是分类(category)不相同:', dif_name_category_dict_sort)
+            for key in dif_name_category_sort.keys():
+                self.wrong_list.append('==== '+str(key)+','+dif_name_category_sort[key][0]+','+ dif_name_category_sort[key][1])
+        print(floor_name + '层' + 'base_indoor_poi表poi_id:'+ 'poi名称（c_name）相同，但是分类(category)不相同:', dif_name_category_sort)
         del ds
 
     def base_indoor_region(self, floor_name):
